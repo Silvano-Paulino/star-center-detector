@@ -49,9 +49,6 @@ if uploaded_file is not None:
         df = pd.DataFrame(centros, columns=["X (Pixel)", "Y (Pixel)"])
         df.insert(0, "ID", range(1, len(df) + 1))
 
-        # Exibir tabela no Streamlit
-        st.table(df)
-
         # Botão para baixar CSV
         csv = df.to_csv(index=False).encode("utf-8")
         st.download_button(
@@ -60,6 +57,10 @@ if uploaded_file is not None:
             file_name="coordenadas_estrelas.csv",
             mime="text/csv",
         )
+
+        # Exibir tabela no Streamlit
+        st.table(df)
+
     else:
         st.warning(
             "Nenhuma estrela detectada. Tente ajustar o limiar ou use uma imagem com maior contraste."

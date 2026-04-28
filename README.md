@@ -19,9 +19,13 @@ Este projeto utiliza técnicas de Visão Computacional (OpenCV) para identificar
 Recomenda-se a utilização de um ambiente virtual para evitar conflitos de dependências:
 
 1. **Criar o ambiente virtual:**
+
    ```bash
    python3 -m venv venv
    ```
+
+   Nota>: No Windows, use `python` em vez de `python3`.
+   Nota>: No NixOs, antes de executar o camando acima, execute `nix-shell` dentro da raiz do projecto.
 
 2. **Ativar o ambiente:**
    - No Linux/macOS: `source venv/bin/activate`
@@ -35,13 +39,17 @@ Recomenda-se a utilização de um ambiente virtual para evitar conflitos de depe
 ## 💻 Como Utilizar
 
 ### 1. Interface Web (Recomendado)
+
 Para uma experiência visual completa:
+
 ```bash
 streamlit run app.py
 ```
 
 ### 2. Script de Linha de Comando (CLI)
+
 Para testes rápidos em ficheiros locais:
+
 ```bash
 python main.py
 ```
@@ -51,10 +59,12 @@ python main.py
 ## ⚠️ Resolução de Problemas (Troubleshooting)
 
 ### Erro: `Segmentation fault (core dumped)` no Linux
-Se encontrar este erro ao tentar correr o Streamlit no Linux (ex: Pop!_OS ou Ubuntu), o problema deve-se geralmente a conflitos entre o OpenCV e as bibliotecas gráficas do sistema.
+
+Se encontrar este erro ao tentar correr o Streamlit no Linux (ex: Pop!\_OS ou Ubuntu), o problema deve-se geralmente a conflitos entre o OpenCV e as bibliotecas gráficas do sistema.
 
 **Solução:**
-1. Certifique-se de que está a usar a versão *headless* do OpenCV no `requirements.txt`:
+
+1. Certifique-se de que está a usar a versão _headless_ do OpenCV no `requirements.txt`:
    ```text
    opencv-python-headless
    ```

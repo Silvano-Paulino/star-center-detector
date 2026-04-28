@@ -1,6 +1,8 @@
-import streamlit as st
 import cv2
 import numpy as np
+import pandas as pd
+import streamlit as st
+
 from detector import processar_imagem_estrelas
 
 st.set_page_config(page_title="Star Center Detector", layout="wide")
@@ -11,7 +13,9 @@ Esta aplicação detecta automaticamente o centro de estrelas em imagens astron�
 Carregue a sua imagem abaixo para começar.
 """)
 
-uploaded_file = st.file_uploader("Escolha uma imagem (JPG, PNG, TIFF)...", type=["jpg", "jpeg", "png", "tiff"])
+uploaded_file = st.file_uploader(
+    "Escolha uma imagem (JPG, PNG, TIFF)...", type=["jpg", "jpeg", "png", "tiff"]
+)
 
 if uploaded_file is not None:
     # Converter o ficheiro carregado para uma imagem OpenCV
@@ -19,7 +23,7 @@ if uploaded_file is not None:
     opencv_image = cv2.imdecode(file_bytes, 1)
 
     # Processar
-    with st.spinner('A processar imagem...'):
+    with st.spinner("A processar imagem..."):
         centros, img_resultado = processar_imagem_estrelas(opencv_image)
 
     # Layout de colunas para exibir imagens
@@ -41,10 +45,24 @@ if uploaded_file is not None:
     st.subheader(f"📊 Coordenadas Detectadas ({len(centros)} estrelas)")
 
     if centros:
-        # Criar uma tabela formatada
-        dados_tabela = [{"ID": i+1, "X (Pixel)": c[0], "Y (Pixel)": c[1]} for i, c in enumerate(centros)]
-        st.table(dados_tabela)
+        # Criar DataFrame para manipulação de dados
+        df = pd.DataFrame(centros, columns=["X (Pixel)", "Y (Pixel)"])
+        df.insert(0, "ID", range(1, len(df) + 1))
+
+        # Exibir tabela no Streamlit
+        st.table(df)
+
+        # Botão para baixar CSV
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="📥 Baixar Coordenadas (CSV)",
+            data=csv,
+            file_name="coordenadas_estrelas.csv",
+            mime="text/csv",
+        )
     else:
-        st.warning("Nenhuma estrela detectada. Tente ajustar o limiar ou use uma imagem com maior contraste.")
+        st.warning(
+            "Nenhuma estrela detectada. Tente ajustar o limiar ou use uma imagem com maior contraste."
+        )
 else:
     st.info("Aguardando upload de imagem...")

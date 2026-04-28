@@ -7,7 +7,6 @@ Este projeto utiliza técnicas de Visão Computacional (OpenCV) para identificar
 - **Interface Web Interativa**: Carregamento de imagens via browser e visualização de resultados em tempo real.
 - **Deteção Automática**: Algoritmo baseado em limiarização (thresholding) e momentos de imagem.
 - **Exportação de Dados**: Lista detalhada de coordenadas (X, Y) das estrelas detetadas.
-- **Modo CLI**: Script de linha de comando para processamento rápido e verificação local.
 
 ## 📋 Pré-requisitos
 
@@ -38,20 +37,12 @@ Recomenda-se a utilização de um ambiente virtual para evitar conflitos de depe
 
 ## 💻 Como Utilizar
 
-### 1. Interface Web (Recomendado)
+### Interface Web (Recomendado)
 
 Para uma experiência visual completa:
 
 ```bash
 streamlit run app.py
-```
-
-### 2. Script de Linha de Comando (CLI)
-
-Para testes rápidos em ficheiros locais:
-
-```bash
-python main.py
 ```
 
 ---
@@ -78,6 +69,5 @@ Se encontrar este erro ao tentar correr o Streamlit no Linux (ex: Pop!\_OS ou Ub
 
 - `app.py`: Interface Web utilizando Streamlit.
 - `detector.py`: Módulo central com a lógica de processamento de imagem.
-- `main.py`: Script original adaptado para usar o módulo `detector.py`.
 - `requirements.txt`: Lista de dependências do projeto.
 - `pictures/`: Pasta para armazenamento de imagens de teste.

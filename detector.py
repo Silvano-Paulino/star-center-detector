@@ -22,7 +22,7 @@ def processar_imagem_estrelas(img):
 
     # 2. Estimar o Background (céu) e o ruído (ruído de leitura/disparo)
     # sigma_clipped_stats calcula média, mediana e desvio padrão ignorando outliers (estrelas)
-    mean, median, std = sigma_clipped_stats(data, sigma=3.0)
+    _, median, std = sigma_clipped_stats(data, sigma=3.0)
 
     # 3. Configurar o Finder (DAOStarFinder)
     # fwhm: Full Width at Half Maximum (largura aproximada da estrela em pixels)

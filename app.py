@@ -1,7 +1,6 @@
 import streamlit as st
 import cv2
 import numpy as np
-from PIL import Image
 from detector import processar_imagem_estrelas
 
 st.set_page_config(page_title="Star Center Detector", layout="wide")

@@ -1,35 +1,47 @@
 import cv2
 import numpy as np
+from astropy.stats import sigma_clipped_stats
+from photutils.detection import DAOStarFinder
+
 
 def processar_imagem_estrelas(img):
     """
-    Recebe uma imagem (numpy array), detecta estrelas e retorna os centros
-    e a imagem com os centros desenhados.
+    Processa uma imagem de estrelas para detecção de centros..
     """
     if img is None:
         return [], None
 
-    # 1. Converter para tons de cinza
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # 1. Converter para tons de cinza (Photutils trabalha com 2D arrays)
+    if len(img.shape) == 3:
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = img
 
-    # 2. Aplicar um limiar (Threshold) para destacar as estrelas
-    # Valor fixo de 200 conforme o código original
-    _, thresh = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)
+    # Converter para float para cálculos astronómicos mais precisos
+    data = gray.astype(np.float32)
 
-    # 3. Encontrar contornos das estrelas
-    contornos, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # 2. Estimar o Background (céu) e o ruído (ruído de leitura/disparo)
+    # sigma_clipped_stats calcula média, mediana e desvio padrão ignorando outliers (estrelas)
+    mean, median, std = sigma_clipped_stats(data, sigma=3.0)
+
+    # 3. Configurar o Finder (DAOStarFinder)
+    # fwhm: Full Width at Half Maximum (largura aproximada da estrela em pixels)
+    # threshold: Deteção de objetos 5 sigmas acima do ruído de fundo
+    daofind = DAOStarFinder(fwhm=3.0, threshold=5.0 * std)
+
+    # Executar a deteção (subtraindo a mediana do fundo para isolar as estrelas)
+    sources = daofind(data - median)
 
     centros = []
-    # Criar uma cópia para não alterar a original se necessário
     img_resultado = img.copy()
 
-    for c in contornos:
-        M = cv2.moments(c)
-        if M["m00"] != 0:
-            cx = int(M["m10"] / M["m00"])
-            cy = int(M["m01"] / M["m00"])
-            centros.append((cx, cy))
-            # Desenhar o centro na imagem de resultado
-            cv2.circle(img_resultado, (cx, cy), 5, (0, 255, 0), -1)
+    if sources is not None:
+        for col in sources:
+            x = float(col["xcentroid"])
+            y = float(col["ycentroid"])
+            centros.append((x, y))
+
+            # Desenhar na imagem (OpenCV precisa de ints para desenhar o círculo)
+            cv2.circle(img_resultado, (int(x), int(y)), 5, (0, 255, 0), -1)
 
     return centros, img_resultado

@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import pandas as pd
 import streamlit as st
+from detector_2 import processar_imagem_estrelas_v2
 
 from detector import processar_imagem_estrelas
 
@@ -24,7 +25,7 @@ if uploaded_file is not None:
 
     # Processar
     with st.spinner("A processar imagem..."):
-        centros, img_resultado = processar_imagem_estrelas(opencv_image)
+        centros, img_resultado = processar_imagem_estrelas_v2(opencv_image)
 
     # Layout de colunas para exibir imagens
     col1, col2 = st.columns(2)
@@ -33,12 +34,12 @@ if uploaded_file is not None:
         st.subheader("Imagem Original")
         # OpenCV usa BGR, Streamlit/PIL usa RGB
         rgb_original = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
-        st.image(rgb_original, width='stretch')
+        st.image(rgb_original, width="stretch")
 
     with col2:
         st.subheader("Estrelas Detectadas")
         rgb_resultado = cv2.cvtColor(img_resultado, cv2.COLOR_BGR2RGB)
-        st.image(rgb_resultado, width='stretch')
+        st.image(rgb_resultado, width="stretch")
 
     # Exibir Lista de Coordenadas
     st.divider()

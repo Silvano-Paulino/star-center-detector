@@ -33,12 +33,12 @@ if uploaded_file is not None:
         st.subheader("Imagem Original")
         # OpenCV usa BGR, Streamlit/PIL usa RGB
         rgb_original = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
-        st.image(rgb_original, use_container_width=True)
+        st.image(rgb_original, width='stretch')
 
     with col2:
         st.subheader("Estrelas Detectadas")
         rgb_resultado = cv2.cvtColor(img_resultado, cv2.COLOR_BGR2RGB)
-        st.image(rgb_resultado, use_container_width=True)
+        st.image(rgb_resultado, width='stretch')
 
     # Exibir Lista de Coordenadas
     st.divider()

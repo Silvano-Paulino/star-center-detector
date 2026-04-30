@@ -37,11 +37,11 @@ def processar_imagem_estrelas(img):
 
     if sources is not None:
         for col in sources:
-            x = float(col["x_centroid"])
-            y = float(col["y_centroid"])
+            x = int(col["x_centroid"])
+            y = int(col["y_centroid"])
             centros.append((x, y))
 
             # Desenhar na imagem (OpenCV precisa de ints para desenhar o círculo)
-            cv2.circle(img_resultado, (int(x), int(y)), 5, (0, 255, 0), -1)
+            cv2.circle(img_resultado, (x, y), 5, (0, 255, 0), -1)
 
     return centros, img_resultado

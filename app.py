@@ -3,10 +3,27 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+# Importar os 3 detetores disponíveis
 from detector import processar_imagem_estrelas
 from detector_2 import processar_imagem_estrelas_v2
+from detector_3 import processar_imagem_estrelas_v3
 
 st.set_page_config(page_title="Star Center Detector", layout="wide")
+
+# Configuração da Barra Lateral
+st.sidebar.title("Configurações")
+metodo = st.sidebar.selectbox(
+    "Escolha o Algoritmo de Deteção:",
+    ("Científico (DAOStarFinder)", "Standard (Momentos)", "Geométrico (Hough Circles)"),
+)
+
+st.sidebar.divider()
+st.sidebar.info("""
+**Dicas:**
+- **Científico**: Melhor para precisão sub-pixel.
+- **Standard**: Mais rápido para imagens claras.
+- **Geométrico**: Útil para discos ou imagens desfocadas.
+""")
 
 st.title("✨ Star Center Detector")
 st.markdown("""
@@ -23,23 +40,30 @@ if uploaded_file is not None:
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     opencv_image = cv2.imdecode(file_bytes, 1)
 
+    # Selecionar a função de processamento com base na escolha do utilizador
+    if metodo == "Científico (DAOStarFinder)":
+        funcao_deteccao = processar_imagem_estrelas
+    elif metodo == "Standard (Momentos)":
+        funcao_deteccao = processar_imagem_estrelas_v2
+    else:
+        funcao_deteccao = processar_imagem_estrelas_v3
+
     # Processar
-    with st.spinner("A processar imagem..."):
-        centros, img_resultado = processar_imagem_estrelas_v2(opencv_image)
+    with st.spinner(f"A processar imagem com o método {metodo}..."):
+        centros, img_resultado = funcao_deteccao(opencv_image)
 
     # Layout de colunas para exibir imagens
     col1, col2 = st.columns(2)
 
     with col1:
         st.subheader("Imagem Original")
-        # OpenCV usa BGR, Streamlit/PIL usa RGB
         rgb_original = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
-        st.image(rgb_original, width="stretch")
+        st.image(rgb_original, use_container_width=True)
 
     with col2:
         st.subheader("Estrelas Detectadas")
         rgb_resultado = cv2.cvtColor(img_resultado, cv2.COLOR_BGR2RGB)
-        st.image(rgb_resultado, width="stretch")
+        st.image(rgb_resultado, use_container_width=True)
 
     # Exibir Lista de Coordenadas
     st.divider()

@@ -2,22 +2,25 @@ import cv2
 import numpy as np
 
 
-def detectar_centros(caminho_imagem):
-    # 1. Carregar a imagem
-    imagem = cv2.imread(caminho_imagem)
-    if imagem is None:
-        print("Erro ao carregar a imagem.")
-        return
+def processar_imagem_estrelas_v3(img):
+    """
+    Versão Avançada (Hough): Utiliza a Transformada de Hough para detetar formas circulares.
+    Útil para estrelas grandes, planetas ou imagens desfocadas.
+    """
+    if img is None:
+        return [], None
 
-    # 2. Pré-processamento
-    # Converter para escala de cinza
-    cinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
+    # 1. Pré-processamento
+    if len(img.shape) == 3:
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = img
 
-    # Suavizar para reduzir ruído (ajuda na deteção)
-    suave = cv2.medianBlur(cinza, 5)
+    # Suavizar para reduzir ruído (ajuda na deteção de círculos)
+    suave = cv2.medianBlur(gray, 5)
 
-    # 3. Aplicar a Transformada de Hough para Círculos
-    # Parâmetros: imagem, método, dp, dist_min_centros, param1(bordas), param2(precisão), minRadius, maxRadius
+    # 2. Aplicar a Transformada de Hough para Círculos
+    # dp=1.2, minDist=30, param1=50, param2=35, minRadius=10, maxRadius=150
     circulos = cv2.HoughCircles(
         suave,
         cv2.HOUGH_GRADIENT,
@@ -29,32 +32,34 @@ def detectar_centros(caminho_imagem):
         maxRadius=150,
     )
 
-    # 4. Processar resultados
+    centros = []
+    img_resultado = img.copy()
+
+    # 3. Processar resultados
     if circulos is not None:
         circulos = np.uint16(np.around(circulos))
-
-        print(f"Encontradas {len(circulos[0])} manchas:")
-
         for i in circulos[0, :]:
-            centro_x, centro_y, raio = i[0], i[1], i[2]
+            cx, cy, raio = int(i[0]), int(i[1]), int(i[2])
+            centros.append((cx, cy))
 
-            # Imprimir coordenadas
-            print(f"Centro: X={centro_x}, Y={centro_y} | Raio={raio}")
+            # Desenhar o círculo e o centro na imagem de resultado
+            cv2.circle(img_resultado, (cx, cy), raio, (0, 255, 0), 2)  # Contorno
+            cv2.circle(img_resultado, (cx, cy), 2, (0, 0, 255), 3)  # Centro
 
-            # Desenhar na imagem para visualização
-            cv2.circle(imagem, (centro_x, centro_y), raio, (0, 255, 0), 2)  # Círculo
-            cv2.circle(imagem, (centro_x, centro_y), 2, (0, 0, 255), 3)  # Centro
-
-        # Mostrar imagem final
-        cv2.imshow("Deteção de Manchas", imagem)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-    else:
-        print("Nenhum círculo detetado. Tenta ajustar os parâmetros param1 ou param2.")
+    return centros, img_resultado
 
 
 def main():
-    detectar_centros("pictures/picture-1.jpeg")
+    # Mantém compatibilidade com script CLI
+    caminho_imagem = "pictures/picture-1.jpeg"
+    img = cv2.imread(caminho_imagem)
+
+    if img is not None:
+        centros, resultado = processar_imagem_estrelas_v3(img)
+        print(f"Manchas encontradas: {len(centros)}")
+        cv2.imshow("Deteção V3 (Hough Circles)", resultado)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":

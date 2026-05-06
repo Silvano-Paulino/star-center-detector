@@ -45,3 +45,20 @@ def processar_imagem_estrelas(img):
             cv2.circle(img_resultado, (x, y), 5, (0, 255, 0), -1)
 
     return centros, img_resultado
+
+
+def main():
+    # Para execução via CLI
+    caminho_imagem = "pictures/picture-1.jpeg"
+    img = cv2.imread(caminho_imagem)
+
+    if img is not None:
+        centros, resultado = processar_imagem_estrelas(img)
+        print(f"Estrelas encontradas: {len(centros)}")
+        cv2.imshow("Deteção DAOStarFinder", resultado)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()

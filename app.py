@@ -2,10 +2,9 @@ import cv2
 import numpy as np
 import pandas as pd
 import streamlit as st
-from detectort import processar_imagem_estrelas_v2
-
 
 from detector import processar_imagem_estrelas
+from detector_2 import processar_imagem_estrelas_v2
 
 st.set_page_config(page_title="Star Center Detector", layout="wide")
 

@@ -77,10 +77,10 @@ if uploaded_file is not None:
         # Botão para baixar CSV
         csv = df.to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="📥 Baixar Coordenadas (CSV)",
+            label="📥 Baixar Coordenadas (xlsx)",
             data=csv,
-            file_name="coordenadas_estrelas.csv",
-            mime="text/csv",
+            file_name="coordenadas_estrelas.xlsx",
+            mime="text/xlsx",
         )
 
         # Exibir tabela no Streamlit

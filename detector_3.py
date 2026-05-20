@@ -12,12 +12,12 @@ def processar_imagem_estrelas_v3(img):
 
     # 1. Pré-processamento
     if len(img.shape) == 3:
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     else:
-        gray = img
+        img_gray = img
 
     # Suavizar para reduzir ruído (ajuda na deteção de círculos)
-    suave = cv2.medianBlur(gray, 5)
+    suave = cv2.medianBlur(img_gray, 5)
 
     # 2. Aplicar a Transformada de Hough para Círculos
     # dp=1.2, minDist=30, param1=50, param2=35, minRadius=10, maxRadius=150
@@ -28,8 +28,8 @@ def processar_imagem_estrelas_v3(img):
         minDist=30,
         param1=50,
         param2=35,
-        minRadius=10,
-        maxRadius=150,
+        minRadius=50,
+        maxRadius=100,
     )
 
     centros = []

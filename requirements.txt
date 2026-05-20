@@ -5,3 +5,4 @@ Pillow
 astropy
 photutils
 pandas
+openpyxl

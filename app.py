@@ -1,3 +1,5 @@
+import io
+
 import cv2
 import numpy as np
 import pandas as pd
@@ -74,13 +76,15 @@ if uploaded_file is not None:
         df = pd.DataFrame(centros, columns=["X (Pixel)", "Y (Pixel)"])
         df.insert(0, "ID", range(1, len(df) + 1))
 
-        # Botão para baixar CSV
-        csv = df.to_csv(index=False).encode("utf-8")
+        buffer = io.BytesIO()
+        with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+            df.to_excel(writer, index=False)
+
         st.download_button(
-            label="📥 Baixar Coordenadas (xlsx)",
-            data=csv,
+            label="📥 Baixar Coordenadas (XLSX)",
+            data=buffer.getvalue(),
             file_name="coordenadas_estrelas.xlsx",
-            mime="text/xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
 
         # Exibir tabela no Streamlit

@@ -4,14 +4,14 @@ Este projeto utiliza técnicas de Visão Computacional (OpenCV) para identificar
 
 ## 🚀 Funcionalidades
 
-- **Interface Web Interativa**: Carregamento de imagens via browser e visualização de resultados em tempo real.
-- **Deteção Automática**: Algoritmo baseado em limiarização (thresholding) e momentos de imagem.
-- **Exportação de Dados**: Lista detalhada de coordenadas (X, Y) das estrelas detetadas.
+- **Deteção Automática**: Algoritmo baseado na Transformada de Hough para detetar círculos (estrelas).
+- **Exportação de Dados**: Gera automaticamente um ficheiro `coordenadas_estrelas.xlsx` com as coordenadas (X, Y) das estrelas detetadas.
 
 ## 📋 Pré-requisitos
 
 - Python 3.8 ou superior
 - Pip (gestor de pacotes de Python)
+- Bibliotecas: OpenCV, NumPy, Pandas, Openpyxl
 
 ## 🛠️ Instalação
 

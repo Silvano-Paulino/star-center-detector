@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import pandas as pd
 
 
 def processar_imagem_estrelas_v3(img):
@@ -57,6 +58,14 @@ def main():
     if img is not None:
         centros, resultado = processar_imagem_estrelas_v3(img)
         print(f"Manchas encontradas: {len(centros)}")
+
+        if centros:
+            # Gerar DataFrame e exportar para Excel
+            df = pd.DataFrame(centros, columns=["X", "Y"])
+            nome_arquivo_excel = "coordenadas_estrelas.xlsx"
+            df.to_excel(nome_arquivo_excel, index=False)
+            print(f"Coordenadas exportadas para: {nome_arquivo_excel}")
+
         cv2.imshow("Deteção V3 (Hough Circles)", resultado)
         cv2.waitKey(0)
         cv2.destroyAllWindows()

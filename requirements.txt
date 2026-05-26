@@ -1,8 +1,2 @@
-streamlit
-opencv-python-headless
+opencv-python
 numpy
-Pillow
-astropy
-photutils
-pandas
-openpyxl

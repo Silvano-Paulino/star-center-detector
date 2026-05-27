@@ -18,19 +18,19 @@ def processar_imagem_estrelas_v3(img):
         img_gray = img
 
     # Suavizar para reduzir ruído (ajuda na deteção de círculos)
-    suave = cv2.medianBlur(img_gray, 5)
+    suave = cv2.GaussianBlur(img_gray, (5, 5), 0)
 
     # 2. Aplicar a Transformada de Hough para Círculos
     # dp=1.2, minDist=30, param1=50, param2=35, minRadius=10, maxRadius=150
     circulos = cv2.HoughCircles(
         suave,
         cv2.HOUGH_GRADIENT,
-        dp=1.2,
-        minDist=30,
-        param1=50,
-        param2=35,
-        minRadius=50,
-        maxRadius=100,
+        dp=1.0,
+        minDist=80,
+        param1=120,
+        param2=55,
+        minRadius=8,
+        maxRadius=35,
     )
 
     centros = []

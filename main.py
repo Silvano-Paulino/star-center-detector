@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import pandas as pd
+import os
+import sys
 
 
 def processar_imagem_estrelas_v3(img):
@@ -21,7 +23,6 @@ def processar_imagem_estrelas_v3(img):
     suave = cv2.GaussianBlur(img_gray, (5, 5), 0)
 
     # 2. Aplicar a Transformada de Hough para Círculos
-    # dp=1.2, minDist=30, param1=50, param2=35, minRadius=10, maxRadius=150
     circulos = cv2.HoughCircles(
         suave,
         cv2.HOUGH_GRADIENT,
@@ -51,21 +52,34 @@ def processar_imagem_estrelas_v3(img):
 
 
 def main():
-    # Mantém compatibilidade com script CLI
+    # Caminho da imagem com validação
     caminho_imagem = "pictures/picture-1.jpeg"
+    
+    # Verificar se o arquivo existe
+    if not os.path.exists(caminho_imagem):
+        print(f"Erro: Arquivo não encontrado: {caminho_imagem}")
+        print(f"Diretório atual: {os.getcwd()}")
+        sys.exit(1)
+    
     img = cv2.imread(caminho_imagem)
 
-    if img is not None:
-        centros, resultado = processar_imagem_estrelas_v3(img)
-        print(f"Manchas encontradas: {len(centros)}")
+    if img is None:
+        print(f"Erro: Não foi possível ler a imagem: {caminho_imagem}")
+        sys.exit(1)
 
-        if centros:
-            # Gerar DataFrame e exportar para Excel
-            df = pd.DataFrame(centros, columns=["X", "Y"])
-            nome_arquivo_excel = "coordenadas_estrelas.xlsx"
-            df.to_excel(nome_arquivo_excel, index=False)
-            print(f"Coordenadas exportadas para: {nome_arquivo_excel}")
+    centros, resultado = processar_imagem_estrelas_v3(img)
+    print(f"Manchas encontradas: {len(centros)}")
 
+    if centros:
+        # Gerar DataFrame e exportar para Excel
+        df = pd.DataFrame(centros, columns=["X", "Y"])
+        nome_arquivo_excel = "coordenadas_estrelas.xlsx"
+        df.to_excel(nome_arquivo_excel, index=False, engine="openpyxl")
+        print(f"Coordenadas exportadas para: {nome_arquivo_excel}")
+    else:
+        print("Nenhuma estrela/mancha detectada.")
+
+    if resultado is not None:
         cv2.imshow("Deteção V3 (Hough Circles)", resultado)
         cv2.waitKey(0)
         cv2.destroyAllWindows()

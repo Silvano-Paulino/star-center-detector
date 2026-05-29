@@ -1,8 +1,9 @@
+import os
+import sys
+
 import cv2
 import numpy as np
 import pandas as pd
-import os
-import sys
 
 
 def processar_imagem_estrelas_v3(img):
@@ -27,11 +28,11 @@ def processar_imagem_estrelas_v3(img):
         suave,
         cv2.HOUGH_GRADIENT,
         dp=1.0,
-        minDist=80,
-        param1=120,
-        param2=55,
-        minRadius=8,
-        maxRadius=35,
+        minDist=30,
+        param1=500,
+        param2=35,
+        minRadius=50,
+        maxRadius=100,
     )
 
     centros = []
@@ -53,36 +54,36 @@ def processar_imagem_estrelas_v3(img):
 
 def main():
     # Caminho da imagem com validação
-    caminho_imagem = "pictures/picture-1.jpeg"
-    
+    caminho_imagem = "pictures/picture-2.jpeg"
+
     # Verificar se o arquivo existe
     if not os.path.exists(caminho_imagem):
         print(f"Erro: Arquivo não encontrado: {caminho_imagem}")
         print(f"Diretório atual: {os.getcwd()}")
         sys.exit(1)
-    
+
     img = cv2.imread(caminho_imagem)
 
     if img is None:
         print(f"Erro: Não foi possível ler a imagem: {caminho_imagem}")
         sys.exit(1)
 
-    centros, resultado = processar_imagem_estrelas_v3(img)
-    print(f"Manchas encontradas: {len(centros)}")
+    centros, _ = processar_imagem_estrelas_v3(img)
+    print(f"Coordenadas encontradas: {len(centros)}")
 
     if centros:
         # Gerar DataFrame e exportar para Excel
         df = pd.DataFrame(centros, columns=["X", "Y"])
-        nome_arquivo_excel = "coordenadas_estrelas.xlsx"
+        nome_arquivo_excel = "./coordenadas_estrelas.xlsx"
         df.to_excel(nome_arquivo_excel, index=False, engine="openpyxl")
         print(f"Coordenadas exportadas para: {nome_arquivo_excel}")
     else:
-        print("Nenhuma estrela/mancha detectada.")
+        print("Nenhuma coordenada detectada.")
 
-    if resultado is not None:
-        cv2.imshow("Deteção V3 (Hough Circles)", resultado)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+    # if resultado is not None:
+    #     cv2.cvShowImage("Deteção V3 (Hough Circles)", resultado)
+    #     cv2.waitKey(0)
+    #     cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":

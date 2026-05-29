@@ -7,6 +7,8 @@ let
     pandas
     openpyxl
     opencv4
+    astropy
+    photutils
   ]);
 in
 pkgs.mkShell {

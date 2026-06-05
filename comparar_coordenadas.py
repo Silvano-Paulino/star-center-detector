@@ -109,7 +109,7 @@ def main():
     total_manual = len(df_manual)
     total_novas = len(df_novas)
 
-    print(f"\nRESUMO:")
+    print("\nRESUMO:")
     print(f"- Estrelas do Scan: {total_manual}")
     print(
         f"- Encontradas pelo Algoritmo: {encontradas} ({(encontradas / total_manual) * 100:.1f}%)"

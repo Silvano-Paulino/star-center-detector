@@ -65,7 +65,7 @@ def encontrar_centroides_clean(caminho_imagem):
 
 def main():
     imagem_alvo = "pictures/picture-2.jpeg"
-    print(f"--- Iniciando Deteção Robusta (Centroides Clean) ---")
+    print("--- Iniciando Deteção Robusta (Centroides Clean) ---")
 
     resultado = encontrar_centroides_clean(imagem_alvo)
 

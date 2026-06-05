@@ -6,7 +6,14 @@ import numpy as np
 import pandas as pd
 
 
-def processar_imagem_estrelas_v3(img):
+def detectar_centro_estrelas_atraves_da_imagem(
+    img,
+    minDistValue=30,
+    param1Value=50,
+    param2Value=35,
+    minRadiusValue=50,
+    maxRadiusValue=100,
+):
     """
     Versão Avançada (Hough): Utiliza a Transformada de Hough para detetar formas circulares.
     Útil para estrelas grandes, planetas ou imagens desfocadas.
@@ -28,11 +35,11 @@ def processar_imagem_estrelas_v3(img):
         suave,
         cv2.HOUGH_GRADIENT,
         dp=1.0,
-        minDist=30,
-        param1=500,
-        param2=35,
-        minRadius=50,
-        maxRadius=100,
+        minDist=minDistValue,
+        param1=param1Value,
+        param2=param2Value,
+        minRadius=minRadiusValue,
+        maxRadius=maxRadiusValue,
     )
 
     centros = []
@@ -68,7 +75,7 @@ def main():
         print(f"Erro: Não foi possível ler a imagem: {caminho_imagem}")
         sys.exit(1)
 
-    centros, _ = processar_imagem_estrelas_v3(img)
+    centros, _ = detectar_centro_estrelas_atraves_da_imagem(img)
     print(f"Coordenadas encontradas: {len(centros)}")
 
     if centros:
